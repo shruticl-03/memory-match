@@ -77,3 +77,6 @@ Save your best time and aim for the top of the leaderboard!
 
 📂 Project Structure
 index.html        ← Main file (includes CSS & JS inline)
+
+ScrennShot:
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/bdb99b86-2acc-453b-b937-fac6f6a1d7e1" />
