@@ -75,6 +75,8 @@ Choose a theme and difficulty level.
 Flip cards to find all pairs before time runs out.
 Save your best time and aim for the top of the leaderboard!
 
+Demo: https://memory-match-shruti.netlify.app/
+
 📂 Project Structure
 index.html        ← Main file (includes CSS & JS inline)
 
