@@ -1,617 +1,484 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Match - Emoji Pairs</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-        }
-        
-        #gameContainer {
-            width: 100%;
-            max-width: 800px;
-            padding: 20px;
-        }
-        
-        #gameCanvas {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        #ui {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .screen {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            min-width: 300px;
-            pointer-events: all;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 2.5em;
-        }
-        
-        h2 {
-            color: #666;
-            margin-bottom: 20px;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.2em;
-            cursor: pointer;
-            margin: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .theme-btn {
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 1em;
-        }
-        
-        .stats {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            font-size: 1.2em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        .leaderboard {
-            max-height: 200px;
-            overflow-y: auto;
-            margin: 20px 0;
-            text-align: left;
-        }
-        
-        .leaderboard-item {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .card {
-            position: absolute;
-            background: white;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2em;
-            transition: transform 0.3s, opacity 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        .card-back {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-        }
-        
-        .card-front {
-            background: white;
-        }
-        
-        .flipped {
-            transform: rotateY(180deg);
-        }
-        
-        .matched {
-            opacity: 0.6;
-            cursor: default;
-        }
-        
-        .controls {
-            margin-top: 20px;
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        @media (max-width: 600px) {
-            .screen {
-                padding: 20px;
-                min-width: 280px;
-            }
-            
-            h1 {
-                font-size: 2em;
-            }
-            
-            button {
-                padding: 12px 25px;
-                font-size: 1.1em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ Memory Match - Emoji Pairs ✨</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top left, #6a11cb, #2575fc);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #gameContainer {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #gameCanvas {
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+      height: auto;
+    }
+
+    .screen {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 25px;
+      padding: 40px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+      transition: 0.4s ease;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #222;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: #555;
+      margin: 15px 0;
+    }
+
+    button {
+      background: linear-gradient(135deg, #ff9966, #ff5e62);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(255, 94, 98, 0.5);
+    }
+
+    #themeSelection, #difficultySelection {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .theme-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .diff-btn {
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+    }
+
+    .leaderboard {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 15px;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      outline: none;
+      width: 80%;
+      margin: 10px auto;
+      display: block;
+      text-align: center;
+    }
+
+    .stats-overlay {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 1.1em;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 25px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      display: none;
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+      50% { box-shadow: 0 0 25px rgba(255,255,255,0.7); }
+      100% { box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+    }
+
+    #gameCanvas {
+      animation: glow 2s infinite;
+    }
+  </style>
 </head>
 <body>
-    <div id="gameContainer">
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
-        <div id="ui">
-            <!-- Menu Screen -->
-            <div id="menuScreen" class="screen">
-                <h1>Memory Match</h1>
-                <h2>Select Theme</h2>
-                <div id="themeSelection">
-                    <button class="theme-btn" data-theme="animals">🐾 Animals</button>
-                    <button class="theme-btn" data-theme="food">🍕 Food</button>
-                    <button class="theme-btn" data-theme="symbols">⭐ Symbols</button>
-                    <button class="theme-btn" data-theme="travel">✈️ Travel</button>
-                </div>
-                <div class="controls">
-                    <p>Click cards to find matches</p>
-                    <p>Complete quickly for high score!</p>
-                </div>
-            </div>
-            
-            <!-- Game Over Screen -->
-            <div id="gameOverScreen" class="screen hidden">
-                <h1>Congratulations!</h1>
-                <h2>You found all pairs!</h2>
-                <p>Time: <span id="finalTime">0</span> seconds</p>
-                <p>Moves: <span id="finalMoves">0</span></p>
-                <input type="text" id="playerName" placeholder="Enter your name" maxlength="15">
-                <button id="saveScoreBtn">Save Score</button>
-                <button id="playAgainBtn">Play Again</button>
-                <button id="menuBtn">Main Menu</button>
-            </div>
-            
-            <!-- Leaderboard Screen -->
-            <div id="leaderboardScreen" class="screen hidden">
-                <h1>Leaderboard</h1>
-                <div id="leaderboardList" class="leaderboard">
-                    <!-- Leaderboard items will be added here -->
-                </div>
-                <button id="backToMenuBtn">Back to Menu</button>
-            </div>
-        </div>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div id="statsOverlay" class="stats-overlay">
+      ⏱ <span id="timeDisplay">0</span>s |
+      🎯 <span id="movesDisplay">0</span> |
+      💖 <span id="pairsDisplay">0</span>
     </div>
 
-    <script>
-        class MemoryGame {
-            constructor() {
-                this.canvas = document.getElementById('gameCanvas');
-                this.ctx = this.canvas.getContext('2d');
-                this.gameState = 'menu';
-                this.score = 0;
-                this.level = 1;
-                this.entities = [];
-                this.cards = [];
-                this.selectedCards = [];
-                this.matchedPairs = 0;
-                this.totalPairs = 0;
-                this.moves = 0;
-                this.time = 0;
-                this.timerInterval = null;
-                this.currentTheme = 'animals';
-                this.leaderboard = [];
-                
-                this.themes = {
-                    animals: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'],
-                    food: ['🍎', '🍕', '🍔', '🍟', '🍦', '🍩', '🍪', '🍉'],
-                    symbols: ['⭐', '❤️', '🌟', '🔶', '⚡', '💎', '🎯', '🎨'],
-                    travel: ['🚗', '✈️', '🚀', '🚢', '🏖️', '🗺️', '🏔️', '🏛️']
-                };
-                
-                this.setupCanvas();
-                this.setupInput();
-                this.loadLeaderboard();
-                this.gameLoop();
-            }
-            
-            setupCanvas() {
-                this.resizeCanvas();
-                window.addEventListener('resize', () => this.resizeCanvas());
-            }
-            
-            resizeCanvas() {
-                const container = document.getElementById('gameContainer');
-                const width = Math.min(800, container.clientWidth - 40);
-                const height = Math.min(600, window.innerHeight - 40);
-                
-                this.canvas.width = width;
-                this.canvas.height = height;
-                this.render();
-            }
-            
-            setupInput() {
-                // Keyboard controls
-                this.keys = {};
-                document.addEventListener('keydown', (e) => {
-                    this.keys[e.code] = true;
-                    if (e.code === 'Escape' && this.gameState === 'playing') {
-                        this.pauseGame();
-                    }
-                });
-                
-                document.addEventListener('keyup', (e) => {
-                    this.keys[e.code] = false;
-                });
-                
-                // Mouse/touch controls
-                this.canvas.addEventListener('click', (e) => this.handleClick(e));
-                this.canvas.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    this.handleClick(e.touches[0]);
-                });
-                
-                // Theme selection
-                document.querySelectorAll('.theme-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        this.currentTheme = e.target.dataset.theme;
-                        this.startGame();
-                    });
-                });
-                
-                // Game over buttons
-                document.getElementById('saveScoreBtn').addEventListener('click', () => this.saveScore());
-                document.getElementById('playAgainBtn').addEventListener('click', () => this.startGame());
-                document.getElementById('menuBtn').addEventListener('click', () => this.showMenu());
-                document.getElementById('backToMenuBtn').addEventListener('click', () => this.showMenu());
-            }
-            
-            handleClick(event) {
-                if (this.gameState !== 'playing') return;
-                
-                const rect = this.canvas.getBoundingClientRect();
-                const x = (event.clientX - rect.left) * (this.canvas.width / rect.width);
-                const y = (event.clientY - rect.top) * (this.canvas.height / rect.height);
-                
-                this.cards.forEach(card => {
-                    if (this.isPointInCard(x, y, card) && !card.matched && !card.flipped) {
-                        this.flipCard(card);
-                    }
-                });
-            }
-            
-            isPointInCard(x, y, card) {
-                return x >= card.x && x <= card.x + card.width &&
-                       y >= card.y && y <= card.y + card.height;
-            }
-            
-            startGame() {
-                this.gameState = 'playing';
-                this.matchedPairs = 0;
-                this.moves = 0;
-                this.time = 0;
-                this.selectedCards = [];
-                this.createCards();
-                this.hideAllScreens();
-                
-                // Start timer
-                if (this.timerInterval) clearInterval(this.timerInterval);
-                this.timerInterval = setInterval(() => {
-                    this.time++;
-                }, 1000);
-            }
-            
-            createCards() {
-                this.cards = [];
-                const emojis = this.themes[this.currentTheme];
-                this.totalPairs = Math.min(emojis.length, 8); // Max 8 pairs for better gameplay
-                
-                let pairs = [];
-                for (let i = 0; i < this.totalPairs; i++) {
-                    pairs.push(emojis[i]);
-                    pairs.push(emojis[i]);
-                }
-                
-                // Shuffle pairs
-                pairs = pairs.sort(() => Math.random() - 0.5);
-                
-                // Calculate grid layout
-                const cols = 4;
-                const rows = Math.ceil(pairs.length / cols);
-                const padding = 10;
-                const cardWidth = (this.canvas.width - (cols + 1) * padding) / cols;
-                const cardHeight = (this.canvas.height - (rows + 1) * padding) / rows;
-                
-                for (let i = 0; i < pairs.length; i++) {
-                    const row = Math.floor(i / cols);
-                    const col = i % cols;
-                    
-                    this.cards.push({
-                        x: col * (cardWidth + padding) + padding,
-                        y: row * (cardHeight + padding) + padding,
-                        width: cardWidth,
-                        height: cardHeight,
-                        emoji: pairs[i],
-                        flipped: false,
-                        matched: false
-                    });
-                }
-            }
-            
-            flipCard(card) {
-                if (this.selectedCards.length >= 2) return;
-                
-                card.flipped = true;
-                this.selectedCards.push(card);
-                this.playSound('flip');
-                
-                if (this.selectedCards.length === 2) {
-                    this.moves++;
-                    this.checkMatch();
-                }
-            }
-            
-            checkMatch() {
-                const [card1, card2] = this.selectedCards;
-                
-                if (card1.emoji === card2.emoji) {
-                    // Match found
-                    card1.matched = true;
-                    card2.matched = true;
-                    this.matchedPairs++;
-                    this.playSound('match');
-                    
-                    if (this.matchedPairs === this.totalPairs) {
-                        this.gameOver();
-                    }
-                } else {
-                    // No match
-                    setTimeout(() => {
-                        card1.flipped = false;
-                        card2.flipped = false;
-                        this.playSound('no-match');
-                    }, 1000);
-                }
-                
-                setTimeout(() => {
-                    this.selectedCards = [];
-                }, 1000);
-            }
-            
-            gameOver() {
-                this.gameState = 'gameover';
-                clearInterval(this.timerInterval);
-                
-                // Show game over screen
-                document.getElementById('finalTime').textContent = this.time;
-                document.getElementById('finalMoves').textContent = this.moves;
-                document.getElementById('gameOverScreen').classList.remove('hidden');
-                
-                this.playSound('win');
-            }
-            
-            pauseGame() {
-                // Implement pause functionality if needed
-            }
-            
-            showMenu() {
-                this.gameState = 'menu';
-                clearInterval(this.timerInterval);
-                this.hideAllScreens();
-                document.getElementById('menuScreen').classList.remove('hidden');
-            }
-            
-            hideAllScreens() {
-                document.querySelectorAll('.screen').forEach(screen => {
-                    screen.classList.add('hidden');
-                });
-            }
-            
-            showLeaderboard() {
-                this.hideAllScreens();
-                document.getElementById('leaderboardScreen').classList.remove('hidden');
-                this.updateLeaderboardDisplay();
-            }
-            
-            saveScore() {
-                const name = document.getElementById('playerName').value.trim() || 'Player';
-                this.leaderboard.push({
-                    name: name,
-                    time: this.time,
-                    moves: this.moves,
-                    theme: this.currentTheme,
-                    date: new Date().toLocaleDateString()
-                });
-                
-                // Sort by time (ascending) then moves (ascending)
-                this.leaderboard.sort((a, b) => {
-                    if (a.time === b.time) return a.moves - b.moves;
-                    return a.time - b.time;
-                });
-                
-                // Keep only top 10 scores
-                this.leaderboard = this.leaderboard.slice(0, 10);
-                this.saveLeaderboard();
-                this.showLeaderboard();
-            }
-            
-            loadLeaderboard() {
-                const saved = localStorage.getItem('memoryGameLeaderboard');
-                if (saved) {
-                    this.leaderboard = JSON.parse(saved);
-                }
-            }
-            
-            saveLeaderboard() {
-                localStorage.setItem('memoryGameLeaderboard', JSON.stringify(this.leaderboard));
-            }
-            
-            updateLeaderboardDisplay() {
-                const list = document.getElementById('leaderboardList');
-                list.innerHTML = '';
-                
-                this.leaderboard.forEach((score, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'leaderboard-item';
-                    item.innerHTML = `
-                        <span>${index + 1}. ${score.name}</span>
-                        <span>${score.time}s (${score.moves} moves)</span>
-                    `;
-                    list.appendChild(item);
-                });
-            }
-            
-            playSound(type) {
-                // Simple sound effects using Web Audio API
-                try {
-                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioCtx.createOscillator();
-                    const gainNode = audioCtx.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioCtx.destination);
-                    
-                    switch(type) {
-                        case 'flip':
-                            oscillator.type = 'sine';
-                            oscillator.frequency.value = 523.25; // C5
-                            gainNode.gain.value = 0.1;
-                            break;
-                        case 'match':
-                            oscillator.type = 'sine';
-                            oscillator.frequency.value = 784.00; // G5
-                            gainNode.gain.value = 0.2;
-                            break;
-                        case 'no-match':
-                            oscillator.type = 'sawtooth';
-                            oscillator.frequency.value = 196.00; // G3
-                            gainNode.gain.value = 0.1;
-                            break;
-                        case 'win':
-                            oscillator.type = 'sine';
-                            oscillator.frequency.value = 1046.50; // C6
-                            gainNode.gain.value = 0.3;
-                            break;
-                    }
-                    
-                    oscillator.start();
-                    setTimeout(() => {
-                        oscillator.stop();
-                    }, 300);
-                } catch (e) {
-                    console.log('Audio not supported');
-                }
-            }
-            
-            update(deltaTime) {
-                // Game logic updates
-            }
-            
-            render() {
-                // Clear canvas
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                if (this.gameState === 'playing') {
-                    // Draw background
-                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-                    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                    
-                    // Draw cards
-                    this.cards.forEach(card => {
-                        this.ctx.save();
-                        this.ctx.translate(card.x + card.width / 2, card.y + card.height / 2);
-                        
-                        if (card.flipped || card.matched) {
-                            // Draw card front with emoji
-                            this.ctx.fillStyle = 'white';
-                            this.ctx.fillRect(-card.width / 2, -card.height / 2, card.width, card.height);
-                            this.ctx.font = `${card.height * 0.6}px Arial`;
-                            this.ctx.textAlign = 'center';
-                            this.ctx.textBaseline = 'middle';
-                            this.ctx.fillStyle = '#333';
-                            this.ctx.fillText(card.emoji, 0, 0);
-                        } else {
-                            // Draw card back
-                            const gradient = this.ctx.createLinearGradient(
-                                -card.width / 2, -card.height / 2,
-                                card.width / 2, card.height / 2
-                            );
-                            gradient.addColorStop(0, '#ff6b6b');
-                            gradient.addColorStop(1, '#4ecdc4');
-                            
-                            this.ctx.fillStyle = gradient;
-                            this.ctx.fillRect(-card.width / 2, -card.height / 2, card.width, card.height);
-                            
-                            // Card back pattern
-                            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-                            for (let i = -card.width / 2; i < card.width / 2; i += 10) {
-                                for (let j = -card.height / 2; j < card.height / 2; j += 10) {
-                                    this.ctx.fillRect(i, j, 5, 5);
-                                }
-                            }
-                        }
-                        
-                        this.ctx.restore();
-                    });
-                    
-                    // Draw stats
-                    this.ctx.font = '20px Arial';
-                    this.ctx.fillStyle = 'white';
-                    this.ctx.textAlign = 'right';
-                    this.ctx.fillText(`Time: ${this.time}s`, this.canvas.width - 20, 40);
-                    this.ctx.fillText(`Moves: ${this.moves}`, this.canvas.width - 20, 70);
-                    this.ctx.fillText(`Pairs: ${this.matchedPairs}/${this.totalPairs}`, this.canvas.width - 20, 100);
-                }
-            }
-            
-            gameLoop() {
-                const now = performance.now();
-                const deltaTime = (now - (this.lastTime || now)) / 1000;
-                this.lastTime = now;
-                
-                this.update(deltaTime);
-                this.render();
-                
-                requestAnimationFrame(() => this.gameLoop());
-            }
-        }
+    <!-- Menu -->
+    <div id="menuScreen" class="screen">
+      <h1>🧠 Memory Match</h1>
+      <h2>Select Difficulty</h2>
+      <div id="difficultySelection">
+        <button class="diff-btn" data-diff="easy">Easy</button>
+        <button class="diff-btn" data-diff="medium">Medium</button>
+        <button class="diff-btn" data-diff="hard">Hard</button>
+      </div>
+      <h2>Select Theme</h2>
+      <div id="themeSelection">
+        <button class="theme-btn" data-theme="animals">🐾 Animals</button>
+        <button class="theme-btn" data-theme="food">🍕 Food</button>
+        <button class="theme-btn" data-theme="symbols">⭐ Symbols</button>
+        <button class="theme-btn" data-theme="travel">✈️ Travel</button>
+      </div>
+      <button id="viewLeaderboardBtn">🏆 Leaderboard</button>
+      <p style="margin-top:10px;color:#666;font-size:0.9em">
+        ⌨️ Shortcuts: R = Restart | L = Leaderboard | Esc = Menu
+      </p>
+    </div>
 
-        // Initialize game when page loads
-        window.addEventListener('DOMContentLoaded', () => {
-            new MemoryGame();
+    <!-- Game Over -->
+    <div id="gameOverScreen" class="screen hidden">
+      <h1>🎉 You Won!</h1>
+      <h2>Great job!</h2>
+      <p>Time: <span id="finalTime">0</span>s</p>
+      <p>Moves: <span id="finalMoves">0</span></p>
+      <input type="text" id="playerName" placeholder="Enter your name" maxlength="15">
+      <button id="saveScoreBtn">💾 Save Score</button>
+      <button id="playAgainBtn">🔁 Play Again</button>
+      <button id="menuBtn">🏠 Main Menu</button>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="leaderboardScreen" class="screen hidden">
+      <h1>🏆 Leaderboard</h1>
+      <div id="leaderboardList" class="leaderboard"></div>
+      <button id="backToMenuBtn">⬅️ Back</button>
+    </div>
+  </div>
+
+  <script>
+    class MemoryGame {
+      constructor() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        this.gameState = 'menu';
+        this.cards = [];
+        this.selectedCards = [];
+        this.matchedPairs = 0;
+        this.totalPairs = 0;
+        this.moves = 0;
+        this.time = 0;
+        this.timerInterval = null;
+        this.currentTheme = 'animals';
+        this.difficulty = 'medium';
+        this.leaderboard = [];
+
+        this.themes = {
+          animals: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯'],
+          food: ['🍎','🍕','🍔','🍟','🍦','🍩','🍪','🍉','🍰','🥗'],
+          symbols: ['⭐','❤️','🌟','⚡','💎','🎯','🎨','🔥','💫','💡'],
+          travel: ['🚗','✈️','🚀','🚢','🏖️','🗺️','🏔️','🏛️','🚉','🚲']
+        };
+
+        this.setupInput();
+        this.loadLeaderboard();
+        this.gameLoop();
+      }
+
+      setupInput() {
+        // Mouse
+        this.canvas.addEventListener('click', e => this.handleClick(e));
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', e => {
+          if (e.code === 'KeyR' && this.gameState === 'playing') this.startGame();
+          if (e.code === 'KeyL') this.showLeaderboard();
+          if (e.code === 'Escape') this.showMenu();
         });
-    </script>
+
+        // Difficulty select
+        document.querySelectorAll('.diff-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            this.difficulty = e.target.dataset.diff;
+          });
+        });
+
+        // Theme select
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            this.currentTheme = e.target.dataset.theme;
+            this.startGame();
+          });
+        });
+
+        // Buttons
+        document.getElementById('viewLeaderboardBtn').addEventListener('click', () => this.showLeaderboard());
+        document.getElementById('saveScoreBtn').addEventListener('click', () => this.saveScore());
+        document.getElementById('playAgainBtn').addEventListener('click', () => this.startGame());
+        document.getElementById('menuBtn').addEventListener('click', () => this.showMenu());
+        document.getElementById('backToMenuBtn').addEventListener('click', () => this.showMenu());
+      }
+
+      handleClick(event) {
+        if (this.gameState !== 'playing') return;
+
+        const rect = this.canvas.getBoundingClientRect();
+        const x = (event.clientX - rect.left) * (this.canvas.width / rect.width);
+        const y = (event.clientY - rect.top) * (this.canvas.height / rect.height);
+
+        this.cards.forEach(card => {
+          if (this.isPointInCard(x, y, card) && !card.matched && !card.flipped) {
+            if (this.selectedCards.includes(card)) return;
+            this.flipCard(card);
+          }
+        });
+      }
+
+      isPointInCard(x, y, card) {
+        return x >= card.x && x <= card.x + card.width &&
+               y >= card.y && y <= card.y + card.height;
+      }
+
+      startGame() {
+        this.gameState = 'playing';
+        this.matchedPairs = 0;
+        this.moves = 0;
+        this.time = 0;
+        this.selectedCards = [];
+        this.createCards();
+        this.hideAllScreens();
+        document.getElementById('statsOverlay').style.display = 'block';
+
+        if (this.timerInterval) clearInterval(this.timerInterval);
+        this.timerInterval = setInterval(() => {
+          this.time++;
+        }, 1000);
+      }
+
+      createCards() {
+        this.cards = [];
+        const emojis = [...this.themes[this.currentTheme]];
+        if (this.difficulty === 'easy') this.totalPairs = 4;
+        else if (this.difficulty === 'medium') this.totalPairs = 6;
+        else this.totalPairs = 8;
+
+        let pairs = [];
+        for (let i = 0; i < this.totalPairs; i++) {
+          pairs.push(emojis[i], emojis[i]);
+        }
+        pairs.sort(() => Math.random() - 0.5);
+
+        const cols = 4;
+        const rows = Math.ceil(pairs.length / cols);
+        const pad = 10;
+        const cardW = (this.canvas.width - (cols + 1) * pad) / cols;
+        const cardH = (this.canvas.height - (rows + 1) * pad) / rows;
+
+        for (let i = 0; i < pairs.length; i++) {
+          const row = Math.floor(i / cols);
+          const col = i % cols;
+          this.cards.push({
+            x: col * (cardW + pad) + pad,
+            y: row * (cardH + pad) + pad,
+            width: cardW,
+            height: cardH,
+            emoji: pairs[i],
+            flipped: false,
+            matched: false
+          });
+        }
+      }
+
+      flipCard(card) {
+        if (this.selectedCards.length >= 2) return;
+        card.flipped = true;
+        this.selectedCards.push(card);
+        this.playSound('flip');
+
+        if (this.selectedCards.length === 2) {
+          this.moves++;
+          this.checkMatch();
+        }
+      }
+
+      checkMatch() {
+        const [a, b] = this.selectedCards;
+        if (a.emoji === b.emoji) {
+          a.matched = b.matched = true;
+          this.matchedPairs++;
+          this.playSound('match');
+          if (this.matchedPairs === this.totalPairs) this.gameOver();
+        } else {
+          setTimeout(() => {
+            a.flipped = b.flipped = false;
+            this.playSound('no-match');
+          }, 800);
+        }
+        setTimeout(() => this.selectedCards = [], 800);
+      }
+
+      gameOver() {
+        this.gameState = 'gameover';
+        clearInterval(this.timerInterval);
+        document.getElementById('statsOverlay').style.display = 'none';
+        document.getElementById('finalTime').textContent = this.time;
+        document.getElementById('finalMoves').textContent = this.moves;
+        this.hideAllScreens();
+        document.getElementById('gameOverScreen').classList.remove('hidden');
+        this.playSound('win');
+      }
+
+      showMenu() {
+        clearInterval(this.timerInterval);
+        this.hideAllScreens();
+        document.getElementById('menuScreen').classList.remove('hidden');
+        document.getElementById('statsOverlay').style.display = 'none';
+      }
+
+      hideAllScreens() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      }
+
+      showLeaderboard() {
+        this.hideAllScreens();
+        document.getElementById('leaderboardScreen').classList.remove('hidden');
+        this.updateLeaderboardDisplay();
+      }
+
+      saveScore() {
+        const name = document.getElementById('playerName').value.trim() || 'Player';
+        this.leaderboard.push({
+          name, time: this.time, moves: this.moves,
+          theme: this.currentTheme, difficulty: this.difficulty,
+          date: new Date().toLocaleDateString()
+        });
+        this.leaderboard.sort((a,b) => a.time - b.time || a.moves - b.moves);
+        this.leaderboard = this.leaderboard.slice(0,10);
+        this.saveLeaderboard();
+        this.showLeaderboard();
+      }
+
+      loadLeaderboard() {
+        const data = localStorage.getItem('memoryLeaderboard');
+        if (data) this.leaderboard = JSON.parse(data);
+      }
+
+      saveLeaderboard() {
+        localStorage.setItem('memoryLeaderboard', JSON.stringify(this.leaderboard));
+      }
+
+      updateLeaderboardDisplay() {
+        const list = document.getElementById('leaderboardList');
+        list.innerHTML = '';
+        this.leaderboard.forEach((s,i) => {
+          const div = document.createElement('div');
+          div.className = 'leaderboard-item';
+          div.innerHTML = `<span>${i+1}. ${s.name}</span>
+            <span>${s.time}s | ${s.moves} | ${s.difficulty}</span>`;
+          list.appendChild(div);
+        });
+      }
+
+      playSound(type) {
+        try {
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          const tones = {
+            flip: [523, 0.05],
+            match: [784, 0.1],
+            'no-match': [220, 0.05],
+            win: [1046, 0.2]
+          };
+          const [freq, vol] = tones[type];
+          osc.frequency.value = freq;
+          gain.gain.value = vol;
+          osc.start();
+          osc.stop(this.audioCtx.currentTime + 0.25);
+        } catch (e) {}
+      }
+
+      render() {
+        this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+        if (this.gameState === 'playing') {
+          this.cards.forEach(c => {
+            this.ctx.save();
+            this.ctx.translate(c.x + c.width/2, c.y + c.height/2);
+            this.ctx.fillStyle = c.flipped || c.matched ? '#fff' : 'rgba(255,255,255,0.2)';
+            this.ctx.fillRect(-c.width/2, -c.height/2, c.width, c.height);
+            this.ctx.font = `${c.height*0.5}px Poppins`;
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+            if (c.flipped || c.matched) this.ctx.fillText(c.emoji,0,0);
+            this.ctx.restore();
+          });
+          document.getElementById('timeDisplay').textContent = this.time;
+          document.getElementById('movesDisplay').textContent = this.moves;
+          document.getElementById('pairsDisplay').textContent = `${this.matchedPairs}/${this.totalPairs}`;
+        }
+      }
+
+      gameLoop() {
+        this.render();
+        requestAnimationFrame(() => this.gameLoop());
+      }
+    }
+
+    new MemoryGame();
+  </script>
 </body>
 </html>
